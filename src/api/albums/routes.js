@@ -60,9 +60,6 @@ const routes = (handler) => [
     method: 'GET',
     path: '/albums/{id}/likes',
     handler: handler.getLikeAlbumHandler,
-    options: {
-      auth: 'openmusic_jwt',
-    },
   },
 
 ];

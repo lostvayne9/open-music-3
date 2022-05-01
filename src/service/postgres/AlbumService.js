@@ -112,10 +112,10 @@ class AlbumService {
   }
 
   // album likes
-  async addLikeAlbums(userid, albumid) {
+  async addLikeAlbums(albumid, userid) {
     const query = {
-      text: 'SELECT * FROM user_album_likes WHERE userid = $1 AND albumid = $2 ',
-      values: [userid, albumid],
+      text: 'SELECT * FROM user_album_likes WHERE albumid = $1 AND userid = $2 ',
+      values: [albumid, userid],
     };
 
     const result = await this._pool.query(query);
@@ -159,15 +159,15 @@ class AlbumService {
       return { likes: JSON.parse(result), isCache: 1 };
     } catch (error) {
       const query = {
-        text: 'SELECT userid FROM user_album_likes where albumid = $1',
+        text: 'SELECT COUNT(userid) FROM user_album_likes where albumid = $1',
         values: [albumid],
       };
 
-      const { result } = await this._pool.query(query);
+      const { rows } = await this._pool.query(query);
 
-      await this._cacheService.set(`likes:${albumid}`, JSON.stringify(result));
+      await this._cacheService.set(`likes:${albumid}`, JSON.stringify(rows));
 
-      return { likes: result };
+      return { likes: rows };
     }
   }
 }

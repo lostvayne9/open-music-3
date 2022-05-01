@@ -194,7 +194,7 @@ class AlbumHandler {
       const { id: userId } = request.auth.credentials;
 
       await this._service.getAlbumById(id);
-      await this._service.addLikeAlbums(userId, id);
+      await this._service.addLikeAlbums(id, userId);
       const response = h.response({
         status: 'success',
         message: 'Like album berhasil ditambahkan ke daftar ',
@@ -223,13 +223,13 @@ class AlbumHandler {
 
   async getLikeAlbumHandler(request, h) {
     try {
-      const { albumid } = request.params;
-      const { likes, isCache = 0 } = await this._service.getLikeAlbum(albumid);
+      const { albumId } = request.params;
+      const { likes, isCache = 0 } = await this._service.getLikeAlbum(albumId);
 
       const response = h.response({
         status: 'success',
         data: {
-          likes: likes.length,
+          likes,
         },
       });
       response.code(200);
